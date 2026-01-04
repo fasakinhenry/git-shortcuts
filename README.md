@@ -1,5 +1,29 @@
 # Git Shortcuts Toolkit
 
+> Made with ❤️ for developers by [Fasakin Henry](https://github.com/fasakinhenry)
+
+![Version](https://img.shields.io/github/v/tag/fasakinhenry/git-shortcuts)
+![License](https://img.shields.io/github/license/fasakinhenry/git-shortcuts)
+![Shell](https://img.shields.io/badge/shell-bash%20%7C%20zsh%20%7C%20fish-blue)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Installation (one command)](#installation-one-command)
+- [Commands](#commands)
+  - [Core Commands](#core-commands)
+  - [Branch Management](#branch-management)
+  - [Push / Pull](#push--pull)
+  - [Undo / Fix](#undo--fix)
+  - [Meta / Utility](#meta--utility)
+- [Example Workflow](#example-workflow)
+- [Auto-completion](#auto-completion)
+- [Uninstall](#uninstall)
+- [Philosophy](#philosophy)
+- [License](#license)
+
+## Overview
+
 A lightweight, cross-shell Git productivity toolkit that standardizes common Git workflows into simple, memorable commands.
 
 Works out of the box on:
@@ -18,7 +42,7 @@ Supports:
 ## Installation (one command)
 
 ```bash
-curl -fsSL https://github.com/YOUR_USERNAME/git-shortcuts/raw/main/install.sh | bash
+curl -fsSL https://github.com/fasakinhenry/git-shortcuts/raw/main/install.sh | bash
 ```
 
 Restart your terminal after installation.
