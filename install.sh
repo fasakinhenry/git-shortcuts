@@ -1,35 +1,30 @@
 #!/usr/bin/env bash
-
 set -e
 
-REPO_URL="https://github.com/YOUR_USERNAME/git-shortcuts"
-INSTALL_DIR="$HOME/.git-shortcuts"
+REPO="https://github.com/YOUR_USERNAME/git-shortcuts"
+DIR="$HOME/.git-shortcuts"
 
-# Detect shell
+mkdir -p "$DIR"
+git clone "$REPO" "$DIR" --depth=1 2>/dev/null || git -C "$DIR" pull
+
 if [ -n "$ZSH_VERSION" ]; then
-    RC_FILE="$HOME/.zshrc"
-else
-    RC_FILE="$HOME/.bashrc"
+    RC="$HOME/.zshrc"
+elif [ -n "$BASH_VERSION" ]; then
+    RC="$HOME/.bashrc"
 fi
 
-echo "Installing Git Shortcuts Toolkit..."
-echo "Shell config: $RC_FILE"
-
-mkdir -p "$INSTALL_DIR"
-
-curl -fsSL "$REPO_URL/raw/main/git-shortcuts.sh" -o "$INSTALL_DIR/git-shortcuts.sh"
-
-chmod +x "$INSTALL_DIR/git-shortcuts.sh"
-
-# Source only once
-if ! grep -q "git-shortcuts.sh" "$RC_FILE"; then
-    echo "" >> "$RC_FILE"
-    echo "# Git Shortcuts Toolkit" >> "$RC_FILE"
-    echo "source \"$INSTALL_DIR/git-shortcuts.sh\"" >> "$RC_FILE"
+if [ -n "$RC" ] && ! grep -q git-shortcuts "$RC"; then
+    echo "source $DIR/git-shortcuts.sh" >> "$RC"
+    echo "source $DIR/completion.bash" >> "$RC"
 fi
 
-echo "✔ Installed successfully"
-echo "Restart your shell or run:"
-echo "source $RC_FILE"
+if command -v fish >/dev/null; then
+    mkdir -p ~/.config/fish/functions
+    cp "$DIR/git-shortcuts.fish" ~/.config/fish/functions/
+fi
+
+echo "✔ Git Shortcuts installed. Restart your shell."
+echo "Version: 1.1.0"
 echo "For more information, visit: https://github.com/fasakinhenry/git-shortcuts"
+echo "You can also run 'githelp' after restarting your shell to see available commands."
 echo "Made with ❤ by Henry Fasakin"
