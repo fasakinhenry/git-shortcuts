@@ -4,56 +4,56 @@
 # Git Shortcuts Toolkit
 # =========================
 
-# Get current branch safely
+GIT_SHORTCUTS_VERSION="1.1.0"
+
+# -------------------------
+# Helpers
+# -------------------------
+
 __git_current_branch() {
     git rev-parse --abbrev-ref HEAD 2>/dev/null
+}
+
+__require_git_repo() {
+    git rev-parse --git-dir >/dev/null 2>&1 || {
+        echo "Not a git repository."
+        return 1
+    }
 }
 
 # -------------------------
 # Core commands
 # -------------------------
 
-# Add all changes
 a() {
+    __require_git_repo || return 1
     git add .
 }
 
-# Commit with message
 gc() {
-    if [ -z "$1" ]; then
-        echo "Usage: gc \"commit message\""
-        return 1
-    fi
+    __require_git_repo || return 1
+    [ -z "$1" ] && echo 'Usage: gc "commit message"' && return 1
     git commit -m "$*"
 }
 
-# Status (short)
 gs() {
     git status -sb
 }
 
-# Pretty log
 gl() {
     git log --oneline --graph --decorate -10
 }
 
 # -------------------------
-# Branch-aware push
+# Push / Pull
 # -------------------------
 
 p() {
-    local branch
-    branch="$(__git_current_branch)"
-
-    if [ -z "$branch" ]; then
-        echo "Not on a branch."
-        return 1
-    fi
-
+    __require_git_repo || return 1
+    local branch="$(__git_current_branch)"
     git push -u origin "$branch"
 }
 
-# Pull current branch
 pl() {
     git pull
 }
@@ -62,27 +62,52 @@ pl() {
 # Branch management
 # -------------------------
 
-# Create and switch to new branch
 gnew() {
-    if [ -z "$1" ]; then
-        echo "Usage: gnew branch-name"
-        return 1
-    fi
+    __require_git_repo || return 1
+    [ -z "$1" ] && echo "Usage: gnew branch-name" && return 1
     git checkout -b "$1"
 }
 
-# -------------------------
-# Safe undo
-# -------------------------
-
-# Undo last commit but keep changes staged
-gundo() {
-    echo "Undoing last commit (keeping changes staged)..."
-    git reset --soft HEAD~1
+# Remove merged local branches (safe)
+gclean() {
+    __require_git_repo || return 1
+    git branch --merged \
+        | grep -vE '^\*|main|master|dev' \
+        | xargs -r git branch -d
 }
 
 # -------------------------
-# Manual
+# Undo / Fix
+# -------------------------
+
+# Undo last commit, keep staged
+gundo() {
+    __require_git_repo || return 1
+    git reset --soft HEAD~1
+}
+
+# Amend last commit
+gfix() {
+    __require_git_repo || return 1
+    git commit --amend
+}
+
+# -------------------------
+# Version / Update
+# -------------------------
+
+gversion() {
+    echo "Git Shortcuts Toolkit v$GIT_SHORTCUTS_VERSION"
+}
+
+gupdate() {
+    local dir="$HOME/.git-shortcuts"
+    echo "Updating Git Shortcuts Toolkit..."
+    git -C "$dir" pull --quiet && echo "✔ Updated"
+}
+
+# -------------------------
+# Help
 # -------------------------
 
 githelp() {
@@ -91,31 +116,33 @@ githelp() {
 Git Shortcuts Toolkit
 ====================
 
-Core:
------
+Core
+----
 a                   → git add .
-gc "message"        → git commit -m "message"
-gs                  → git status -sb
-gl                  → git log (pretty)
+gc "msg"            → commit
+gs                  → status (short)
+gl                  → pretty log
 
-Branch-aware:
--------------
-p                   → git push -u origin <current-branch>
-pl                  → git pull
+Branches
+--------
+gnew name           → create & switch branch
+gclean              → delete merged local branches
 
-Branches:
----------
-gnew branch-name    → create & switch branch
+Push / Pull
+-----------
+p                   → push current branch with upstream
+pl                  → pull
 
-Undo:
------
-gundo               → undo last commit (safe, keeps changes staged)
+Undo / Fix
+----------
+gundo               → undo last commit (safe)
+gfix                → amend last commit
 
-Examples:
----------
-a
-gc "Finish CS50 Week 1"
-p
+Meta
+----
+gversion            → show version
+gupdate             → update toolkit
+githelp             → show this help
 
 EOF
 }
