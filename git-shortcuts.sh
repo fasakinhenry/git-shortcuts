@@ -4,6 +4,15 @@
 # Git Shortcuts Toolkit
 # =========================
 
+# Get current branch safely
+__git_current_branch() {
+    git rev-parse --abbrev-ref HEAD 2>/dev/null
+}
+
+# -------------------------
+# Core commands
+# -------------------------
+
 # Add all changes
 a() {
     git add .
@@ -18,9 +27,30 @@ gc() {
     git commit -m "$*"
 }
 
-# Push current branch
+# Status (short)
+gs() {
+    git status -sb
+}
+
+# Pretty log
+gl() {
+    git log --oneline --graph --decorate -10
+}
+
+# -------------------------
+# Branch-aware push
+# -------------------------
+
 p() {
-    git push
+    local branch
+    branch="$(__git_current_branch)"
+
+    if [ -z "$branch" ]; then
+        echo "Not on a branch."
+        return 1
+    fi
+
+    git push -u origin "$branch"
 }
 
 # Pull current branch
@@ -28,34 +58,63 @@ pl() {
     git pull
 }
 
-# Status (short)
-gs() {
-    git status -sb
+# -------------------------
+# Branch management
+# -------------------------
+
+# Create and switch to new branch
+gnew() {
+    if [ -z "$1" ]; then
+        echo "Usage: gnew branch-name"
+        return 1
+    fi
+    git checkout -b "$1"
 }
 
-# Log (pretty)
-gl() {
-    git log --oneline --graph --decorate -10
+# -------------------------
+# Safe undo
+# -------------------------
+
+# Undo last commit but keep changes staged
+gundo() {
+    echo "Undoing last commit (keeping changes staged)..."
+    git reset --soft HEAD~1
 }
 
-# Show manual
+# -------------------------
+# Manual
+# -------------------------
+
 githelp() {
     cat <<'EOF'
 
-Git Shortcuts Manual
-===================
+Git Shortcuts Toolkit
+====================
 
+Core:
+-----
 a                   → git add .
 gc "message"        → git commit -m "message"
-p                   → git push
-pl                  → git pull
 gs                  → git status -sb
 gl                  → git log (pretty)
 
-Usage examples:
----------------
+Branch-aware:
+-------------
+p                   → git push -u origin <current-branch>
+pl                  → git pull
+
+Branches:
+---------
+gnew branch-name    → create & switch branch
+
+Undo:
+-----
+gundo               → undo last commit (safe, keeps changes staged)
+
+Examples:
+---------
 a
-gc "Implement hello.c"
+gc "Finish CS50 Week 1"
 p
 
 EOF
