@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-REPO="https://github.com/YOUR_USERNAME/git-shortcuts"
+REPO="https://github.com/fasakinhenry/git-shortcuts"
 DIR="$HOME/.git-shortcuts"
 
 mkdir -p "$DIR"
