@@ -2,9 +2,9 @@
 
 > Made with ❤️ for developers by [Fasakin Henry](https://github.com/fasakinhenry)
 
-![Version](https://img.shields.io/github/v/tag/fasakinhenry/git-shortcuts)
-![License](https://img.shields.io/github/license/fasakinhenry/git-shortcuts)
-![Shell](https://img.shields.io/badge/shell-bash%20%7C%20zsh%20%7C%20fish-blue)
+![Version](https://img.shields.io/github/v/tag/fasakinhenry/git-shortcuts?style=for-the-badge&labelColor=gray)
+![License](https://img.shields.io/github/license/fasakinhenry/git-shortcuts?style=for-the-badge)
+![Shell](https://img.shields.io/badge/shell-bash%20%7C%20zsh%20%7C%20fish-blue?style=for-the-badge)
 
 ## Table of Contents
 
