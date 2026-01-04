@@ -40,7 +40,9 @@ fi
 
 echo "✔ Installation complete"
 echo "Restart your terminal or run:"
+echo "=========================="
 echo "source $RC_FILE"
+echo "=========================="
 echo "Version: 1.1.0"
 echo "For more information, visit: https://github.com/fasakinhenry/git-shortcuts"
 echo "You can also run 'githelp' after restarting your shell to see available commands."
